@@ -35,24 +35,36 @@
 						var r = JSON.parse(xhr.responseText);
 						if (r && r.races) {
 							self.races = r.races;
+							// sort by start time order
+							self.races.sort(function (a,b) {
+								return Date.parse(a.raceStartTime) - Date.parse(b.raceStartTime);
+							});
 						}
 					}
 					xhr.send();
 				},
 				show: function (mixedOrSplit) {
-					console.log(mixedOrSplit);
 					if (mixedOrSplit==='split') {
 						this.next5 = this.next5Split();
 					} else {
 						this.next5 = this.next5Mixed();
 					}
-					console.log(Array.isArray(this.next5));
 				},
 				next5Split: function () {
-					return {};	
+					var racesSplit = { };
+					this.races.map(function (race) {
+						var raceType = race.meeting.raceType.toLowerCase();
+						if (racesSplit[raceType] === 'undefined') {
+							racesSplit[raceType] = [];
+						}
+						if (racesSplit[raceType].length < 5) {
+							racesSplit[raceType].push(race);
+						}
+					});
+					return racesSplit;
 				},
 				next5Mixed: function () {
-					return [];
+					return this.races.slice(0,5);
 				},
 				raceType: function (raceTypeCode) {
 					switch (raceTypeCode) {
