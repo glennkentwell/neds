@@ -6,13 +6,13 @@
 </head>
 <body>
 	<div id="next5">
-		<div v-if="next5==='mixed'">
+		<div v-if="showing === 'mixed'">
 			Mixed <a href="#" v-on:click="show('split')">Split</a>
 		</div>	
 		<div v-else>
 			<a href="#" v-on:click="show('mixed')">Mixed</a> Split
 		</div>
-		<div v-if="next5==='mixed'">
+		<div v-if="showing === 'mixed'">
 			<div v-for="race in next5Mixed">
 				<a-race :race="race"></a-race>
 			</div>
@@ -79,7 +79,7 @@
 				listName: 'Next 5 Races',
 				apiURL: './races/',
 				races: [],
-				next5: 'mixed',
+				showing: 'mixed',
 			},
 			created: function () {
 				this.fetchData();
@@ -97,7 +97,6 @@
 							racesSplit[raceType].push(race);
 						}
 					});
-					console.log(racesSplit);
 					return racesSplit;
 				},
 				next5Mixed: function () {
@@ -122,7 +121,7 @@
 					xhr.send();
 				},
 				show: function (mixedOrSplit) {
-					this.next5 = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
+					this.showing = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
 				},
 				
 			},
