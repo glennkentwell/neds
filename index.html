@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Next 5 Races</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="next5">
+		<h1>{{ listName }}</h1>
+		<ul>
+		</ul>
+	</div>
+
+	<script>
+		var next5 = new Vue({
+			el: '#next5',
+			data: {
+				listName: 'Next 5 Races',
+				apiURL: './races/',
+				races: []
+			},
+			created: function () {
+				this.fetchData();
+			},
+			methods: {
+				fetchData: function () {
+					var xhr = new XMLHttpRequest();
+					var self = this;
+					xhr.open('GET', this.apiURL);
+					xhr.onload = function () {
+						var r = JSON.parse(xhr.responseText);
+						if (r && r.races) {
+							self.races = r.races;
+						}
+					}
+					xhr.send();
+				}
+			}
+		})
+	</script>
+</body>
+</html>
