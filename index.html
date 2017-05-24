@@ -3,22 +3,49 @@
 <head>
 	<title>Next 5 Races</title>
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<style type="text/css">
+		body {
+			font-family: sans-serif;
+			color: #444;
+		}
+		.tabs { 
+			margin-bottom: 1em;
+		}
+		.tabs * {
+			padding: 1em;
+			padding-left: 0;
+		}
+		.tabs span.on {
+			font-weight: bold;
+		}
+		.races {
+			max-width: 25%;
+			min-width: 30ex;
+			float: left;
+			margin: 0 0.5em 1em 0;
+		}
+		.races > div {
+			border: solid 1px #aaa;
+			margin: 0.4em 0;
+			padding: 0.2em;
+		}
+	</style>
 </head>
 <body>
 	<div id="next5">
-		<div v-if="showing === 'mixed'">
-			Mixed <a href="#" v-on:click="show('split')">Split</a>
+		<div class="tabs" v-if="showing === 'mixed'">
+			<span class="on">Mixed</span><a href="#" v-on:click="show('split')">Split</a>
 		</div>	
-		<div v-else>
-			<a href="#" v-on:click="show('mixed')">Mixed</a> Split
+		<div class="tabs" v-else>
+			<a href="#" v-on:click="show('mixed')">Mixed</a><span class="on">Split</span>
 		</div>
-		<div v-if="showing === 'mixed'">
+		<div class="races" v-if="showing === 'mixed'">
 			<div v-for="race in next5Mixed">
 				<a-race :race="race"></a-race>
 			</div>
 		</div>
 		<div v-else>
-			<div v-for="raceType in next5Split.types">
+			<div class="races" v-for="raceType in next5Split.types">
 				<strong><a-racetypestring :race-type="raceType"></a-racetypestring></strong>
 				<div v-for="race in next5Split[raceType]">
 					<a-race :race="race"></a-race>
