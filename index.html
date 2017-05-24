@@ -14,20 +14,65 @@
 		</div>
 		<div v-if="next5==='mixed'">
 			<div v-for="race in next5Mixed">
-				{{ race.raceStartTime }}
+				<a-race :race="race"></a-race>
 			</div>
 		</div>
 		<div v-else>
 			<div v-for="raceType in next5Split.types">
-				<strong>{{ raceTypeString(raceType) }}</strong>
+				<strong><a-racetypestring :race-type="raceType"></a-racetypestring></strong>
 				<div v-for="race in next5Split[raceType]">
-					{{ race.raceStartTime }} {{ race.meeting.location }}
+					<a-race :race="race"></a-race>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<script>
+	
+		// race component
+		var Race = {
+			template: `<div>
+				{{ niceTimeUntilRace }}<br>
+				{{ race.meeting.meetingName }} ({{ race.meeting.location }})
+				</div>
+			`,
+			props: [ 'race' ],
+			computed: {
+				secondsUntilRace: function () {
+					raceStartTime = Date.parse(this.race.raceStartTime);	
+					var now = (new Date()).getTime();
+					var seconds = Math.round(raceStartTime - now);
+					return seconds;
+				},
+				niceTimeUntilRace: function () {
+					var seconds = this.secondsUntilRace;
+					var hours = seconds % 3600;
+					var minutes = (seconds - hours * 3600) % 60;
+					var niceTime = minutes + 'm';
+					if (hours > 0)
+						niceTime = hours + 'h ' + niceTime;
+					return niceTime;
+				}
+		
+			}
+		}
+		var RaceType = {
+			template: '<div>{{ this.raceTypeString }}</div>',
+			props: [ 'raceType' ],
+			computed: {
+				raceTypeString: function () {
+					switch (this.raceType.toUpperCase()) {
+						case 'R':
+							return 'Racing';
+						case 'G':
+							return 'Greyhounds';
+						case 'H':
+							return 'Harness';
+					}
+				}
+			}
+		}
+
 		var next5 = new Vue({
 			el: '#next5',
 			data: {
@@ -79,18 +124,15 @@
 				show: function (mixedOrSplit) {
 					this.next5 = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
 				},
-				raceTypeString: function (raceTypeCode) {
-					switch (raceTypeCode.toUpperCase()) {
-						case 'R':
-							return 'Racing';
-						case 'G':
-							return 'Greyhounds';
-						case 'H':
-							return 'Harness';
-					}
-				}
+				
+			},
+			components: {
+				'a-race': Race,
+				'a-racetypestring': RaceType
 			}
-		})
+		});
+
+
 	</script>
 </body>
 </html>
