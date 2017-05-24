@@ -6,12 +6,25 @@
 </head>
 <body>
 	<div id="next5">
-		<div v-if="Array.isArray(this.next5)">
+		<div v-if="next5==='mixed'">
 			Mixed <a href="#" v-on:click="show('split')">Split</a>
 		</div>	
 		<div v-else>
 			<a href="#" v-on:click="show('mixed')">Mixed</a> Split
-		</div>	
+		</div>
+		<div v-if="next5==='mixed'">
+			<div v-for="race in next5Mixed">
+				{{ race.raceStartTime }}
+			</div>
+		</div>
+		<div v-else>
+			<div v-for="type in next5Split">
+				<strong>{{ raceType(type[0].meeting.raceType) }}</strong>
+				<div v-for="race in type">
+					{{ race.raceStartTime }}
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script>
@@ -21,10 +34,29 @@
 				listName: 'Next 5 Races',
 				apiURL: './races/',
 				races: [],
-				next5: []
+				next5: 'mixed',
 			},
 			created: function () {
 				this.fetchData();
+			},
+			computed: {
+				next5Split: function () {
+					var racesSplit = [];
+					this.races.map(function (race) {
+						var raceType = race.meeting.raceType.toLowerCase();
+						if (typeof racesSplit[raceType] === 'undefined') {
+							racesSplit[raceType] = [];
+						}
+						if (racesSplit[raceType].length < 5) {
+							racesSplit[raceType].push(race);
+						}
+					});
+					console.log(racesSplit);
+					return racesSplit;
+				},
+				next5Mixed: function () {
+					return this.races.slice(0,5);
+				}
 			},
 			methods: {
 				fetchData: function () {
@@ -44,30 +76,10 @@
 					xhr.send();
 				},
 				show: function (mixedOrSplit) {
-					if (mixedOrSplit==='split') {
-						this.next5 = this.next5Split();
-					} else {
-						this.next5 = this.next5Mixed();
-					}
-				},
-				next5Split: function () {
-					var racesSplit = { };
-					this.races.map(function (race) {
-						var raceType = race.meeting.raceType.toLowerCase();
-						if (typeof racesSplit[raceType] === 'undefined') {
-							racesSplit[raceType] = [];
-						}
-						if (racesSplit[raceType].length < 5) {
-							racesSplit[raceType].push(race);
-						}
-					});
-					return racesSplit;
-				},
-				next5Mixed: function () {
-					return this.races.slice(0,5);
+					this.next5 = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
 				},
 				raceType: function (raceTypeCode) {
-					switch (raceTypeCode) {
+					switch (raceTypeCode.toUpperCase()) {
 						case 'R':
 							return 'Racing';
 						case 'G':
