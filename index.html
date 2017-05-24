@@ -125,13 +125,25 @@
 							racesSplit.types.push(race.meeting.raceType);
 						}
 						if (racesSplit[race.meeting.raceType].length < 5) {
-							racesSplit[race.meeting.raceType].push(race);
+							var racetime = Date.parse(race.raceStartTime);
+							var now = (new Date()).getTime();
+							if (racetime > now)
+								racesSplit[race.meeting.raceType].push(race);
 						}
 					});
 					return racesSplit;
 				},
 				next5Mixed: function () {
-					return this.races.slice(0,5);
+					var r = 0;
+					var racesMixed = [];
+					while (r < this.races.length && racesMixed.length < 5) {
+						var racetime = Date.parse(this.races[r].raceStartTime);
+						var now = (new Date()).getTime();
+						if (racetime > now)
+							racesMixed.push(this.races[r]);
+						r++;
+					}
+					return racesMixed;
 				}
 			},
 			methods: {
@@ -153,8 +165,7 @@
 				},
 				show: function (mixedOrSplit) {
 					this.showing = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
-				},
-				
+				}
 			},
 			components: {
 				'a-race': Race,
