@@ -6,9 +6,12 @@
 </head>
 <body>
 	<div id="next5">
-		<h1>{{ listName }}</h1>
-		<ul>
-		</ul>
+		<div v-if="Array.isArray(this.next5)">
+			Mixed <a href="#" v-on:click="show('split')">Split</a>
+		</div>	
+		<div v-else>
+			<a href="#" v-on:click="show('mixed')">Mixed</a> Split
+		</div>	
 	</div>
 
 	<script>
@@ -17,7 +20,8 @@
 			data: {
 				listName: 'Next 5 Races',
 				apiURL: './races/',
-				races: []
+				races: [],
+				next5: []
 			},
 			created: function () {
 				this.fetchData();
@@ -34,7 +38,22 @@
 						}
 					}
 					xhr.send();
-				}
+				},
+				show: function (mixedOrSplit) {
+					console.log(mixedOrSplit);
+					if (mixedOrSplit==='split') {
+						this.next5 = this.next5Split();
+					} else {
+						this.next5 = this.next5Mixed();
+					}
+					console.log(Array.isArray(this.next5));
+				},
+				next5Split: function () {
+					return {};	
+				},
+				next5Mixed: function () {
+					return [];
+				},
 			}
 		})
 	</script>
