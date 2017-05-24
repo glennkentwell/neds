@@ -60,7 +60,8 @@
 		var Race = {
 			template: `<div>
 				{{ niceTimeUntilRace }}<br>
-				{{ race.meeting.meetingName }} ({{ race.meeting.location }})
+				Race {{ race.raceNumber }}<br>
+				{{ race.meeting.meetingName }} ({{ race.meeting.location }})<br>
 				</div>
 			`,
 			props: [ 'race' ],
@@ -119,13 +120,12 @@
 				next5Split: function () {
 					var racesSplit = { types: [] };
 					this.races.map(function (race) {
-						var raceType = race.meeting.raceType.toLowerCase();
-						if (typeof racesSplit[raceType] === 'undefined') {
-							racesSplit[raceType] = [];
-							racesSplit.types.push(raceType);
+						if (typeof racesSplit[race.meeting.raceType] === 'undefined') {
+							racesSplit[race.meeting.raceType] = [];
+							racesSplit.types.push(race.meeting.raceType);
 						}
-						if (racesSplit[raceType].length < 5) {
-							racesSplit[raceType].push(race);
+						if (racesSplit[race.meeting.raceType].length < 5) {
+							racesSplit[race.meeting.raceType].push(race);
 						}
 					});
 					return racesSplit;
