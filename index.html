@@ -18,10 +18,10 @@
 			</div>
 		</div>
 		<div v-else>
-			<div v-for="type in next5Split">
-				<strong>{{ raceType(type[0].meeting.raceType) }}</strong>
-				<div v-for="race in type">
-					{{ race.raceStartTime }}
+			<div v-for="raceType in next5Split.types">
+				<strong>{{ raceTypeString(raceType) }}</strong>
+				<div v-for="race in next5Split[raceType]">
+					{{ race.raceStartTime }} {{ race.meeting.location }}
 				</div>
 			</div>
 		</div>
@@ -41,11 +41,12 @@
 			},
 			computed: {
 				next5Split: function () {
-					var racesSplit = [];
+					var racesSplit = { types: [] };
 					this.races.map(function (race) {
 						var raceType = race.meeting.raceType.toLowerCase();
 						if (typeof racesSplit[raceType] === 'undefined') {
 							racesSplit[raceType] = [];
+							racesSplit.types.push(raceType);
 						}
 						if (racesSplit[raceType].length < 5) {
 							racesSplit[raceType].push(race);
@@ -78,7 +79,7 @@
 				show: function (mixedOrSplit) {
 					this.next5 = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
 				},
-				raceType: function (raceTypeCode) {
+				raceTypeString: function (raceTypeCode) {
 					switch (raceTypeCode.toUpperCase()) {
 						case 'R':
 							return 'Racing';
