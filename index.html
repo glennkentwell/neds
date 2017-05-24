@@ -42,9 +42,6 @@
 					raceStartTime = Math.round(Date.parse(this.race.raceStartTime) / 1000);
 					var now = Math.round((new Date()).getTime() / 1000);
 					var seconds = raceStartTime - now;
-
-					console.log('race start time: ' + this.race.raceStartTime + "\n" + raceStartTime + "\n" + now + ' now');
-					console.log('seconds: ' + seconds);	
 					return seconds;
 				},
 				niceTimeUntilRace: function () {
@@ -53,7 +50,6 @@
 					if (hours < 0)
 						hours = 0;
 					var minutes = Math.floor((seconds - (hours * 3600)) / 60);
-					console.log('hours: ' + hours + "\nminutes" + minutes);
 					var niceTime = minutes + 'm';
 					if (hours > 0)
 						niceTime = hours + 'h ' + niceTime;
@@ -89,6 +85,8 @@
 			},
 			created: function () {
 				this.fetchData();
+				self = this;
+				setInterval(function () { self.fetchData(); }, 60 * 1000);
 			},
 			computed: {
 				next5Split: function () {
