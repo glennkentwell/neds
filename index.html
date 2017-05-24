@@ -39,15 +39,21 @@
 			props: [ 'race' ],
 			computed: {
 				secondsUntilRace: function () {
-					raceStartTime = Date.parse(this.race.raceStartTime);	
-					var now = (new Date()).getTime();
-					var seconds = Math.round(raceStartTime - now);
+					raceStartTime = Math.round(Date.parse(this.race.raceStartTime) / 1000);
+					var now = Math.round((new Date()).getTime() / 1000);
+					var seconds = raceStartTime - now;
+
+					console.log('race start time: ' + this.race.raceStartTime + "\n" + raceStartTime + "\n" + now + ' now');
+					console.log('seconds: ' + seconds);	
 					return seconds;
 				},
 				niceTimeUntilRace: function () {
 					var seconds = this.secondsUntilRace;
-					var hours = seconds % 3600;
-					var minutes = (seconds - hours * 3600) % 60;
+					var hours = Math.floor(seconds / 3600);
+					if (hours < 0)
+						hours = 0;
+					var minutes = Math.floor((seconds - (hours * 3600)) / 60);
+					console.log('hours: ' + hours + "\nminutes" + minutes);
 					var niceTime = minutes + 'm';
 					if (hours > 0)
 						niceTime = hours + 'h ' + niceTime;
