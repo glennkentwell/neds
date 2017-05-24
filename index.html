@@ -54,6 +54,16 @@
 				next5Mixed: function () {
 					return [];
 				},
+				raceType: function (raceTypeCode) {
+					switch (raceTypeCode) {
+						case 'R':
+							return 'Racing';
+						case 'G':
+							return 'Greyhounds';
+						case 'H':
+							return 'Harness';
+					}
+				}
 			}
 		})
 	</script>
