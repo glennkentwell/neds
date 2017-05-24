@@ -1,4 +1,4 @@
 # neds code test
 
-[Working version online](http://glenn.io/neds/)
+Online demo at http://glenn.io/neds/
 
