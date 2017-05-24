@@ -112,7 +112,6 @@
 		var next5 = new Vue({
 			el: '#next5',
 			data: {
-				listName: 'Next 5 Races',
 				apiURL: './races/',
 				races: [],
 				showing: 'mixed',
@@ -170,7 +169,7 @@
 					xhr.send();
 				},
 				show: function (mixedOrSplit) {
-					this.showing = mixedOrSplit; //==='split' ? this.next5Split() : this.next5Mixed();
+					this.showing = mixedOrSplit;
 				}
 			},
 			components: {
