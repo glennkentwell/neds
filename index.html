@@ -54,7 +54,7 @@
 					var racesSplit = { };
 					this.races.map(function (race) {
 						var raceType = race.meeting.raceType.toLowerCase();
-						if (racesSplit[raceType] === 'undefined') {
+						if (typeof racesSplit[raceType] === 'undefined') {
 							racesSplit[raceType] = [];
 						}
 						if (racesSplit[raceType].length < 5) {
